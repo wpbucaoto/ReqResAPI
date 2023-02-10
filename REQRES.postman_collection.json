@@ -1,0 +1,404 @@
+{
+	"info": {
+		"_postman_id": "c489b5c7-29d4-4911-afdb-5e4410bd9354",
+		"name": "REQRES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24863278"
+	},
+	"item": [
+		{
+			"name": "Positive Scenarios",
+			"item": [
+				{
+					"name": "Single User Existing ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code is not 201\", function () {",
+									"    pm.response.to.not.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"User id should be equal to 2\", function(){",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.id).to.equal(2);",
+									"});",
+									"",
+									"pm.test(\"Verify data for user ID 2\", function(){",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.email).to.equal(\"janet.weaver@reqres.in\");",
+									"    pm.expect(jsonData.data.first_name).to.equal(\"Janet\");",
+									"    pm.expect(jsonData.data.last_name).to.equal(\"Weaver\");",
+									"    pm.expect(jsonData.data.avatar).to.equal(\"https://reqres.in/img/faces/2-image.jpg\");  ",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List of Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response should be an array\", function(){",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an(\"array\");",
+									"});",
+									"",
+									"pm.test(\"Page should be 2\", function(){",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.page).to.equal(2);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/?page=2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Should return 201 status code\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Should return a valid JSON response\", function () {",
+									"    pm.response.to.have.jsonBody();",
+									"});",
+									"",
+									"pm.test(\"Created resource should contain the expected values\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.equal(\"morpheus\");",
+									"    pm.expect(jsonData.job).to.equal(\"leader\");",
+									"});",
+									"",
+									"pm.test(\"Should contain a valid id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"",
+									"pm.test(\"Should contain a valid createdAt value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.createdAt).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/?name=morpheus&job=leader",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "morpheus"
+								},
+								{
+									"key": "job",
+									"value": "leader"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative Scenarios",
+			"item": [
+				{
+					"name": "Single User Non-Existing ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should not be 200\", function () {",
+									"    pm.response.to.not.have.status(200);",
+									"});",
+									"pm.test(\"Status code should be 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single User Existing ID with Special Character",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should not be 200\", function () {",
+									"    pm.response.to.not.have.status(200);",
+									"});",
+									"pm.test(\"Status code should be 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/2*",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"2*"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List of Users but missing page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should not be 200\", function () {",
+									"    pm.response.to.not.have.status(200);",
+									"});",
+									"pm.test(\"Status code should be 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/?page=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List of Users invalid page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should not be 200\", function () {",
+									"    pm.response.to.not.have.status(200);",
+									"});",
+									"pm.test(\"Status code should be 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/?page=100",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User Missing Params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Should not return 201 status code\", function () {",
+									"    pm.response.to.not.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Should return 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \n    \"job\": \"leader\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://reqres.in",
+			"type": "string"
+		}
+	]
+}
